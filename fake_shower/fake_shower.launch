@@ -1,0 +1,8 @@
+<launch>
+    <group ns="shower1">
+        <node pkg="fake_shower" name="FakeShower" type="eye1.py" output="screen" />
+    </group>
+    <group ns="shower2">
+        <node pkg="fake_shower" name="FakeShower" type="eye2.py" output="screen" />
+    </group>
+</launch>
