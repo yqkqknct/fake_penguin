@@ -98,17 +98,14 @@ motor_speed = 50
 motor_command = []
 get_command_time = time.time()
 def m_cb(data):
-    global motor_command, get_command_time
+    global motor_command, get_command_time, motor_speed
     motor_command = data.data
     get_command_time = time.time()
-
-def ms_cb(data):
-    global motor_speed
-    motor_speed = int(data)
+    if len(motor_command) == 3 and motor_command[0] == 1:
+        motor_speed = int(motor_command[2])
 
 rospy.init_node('Fake_motor', anonymous=True)
 rospy.Subscriber('/motor', Int32MultiArray, m_cb)
-rospy.Subscriber('/motor_speed', Int32, ms_cb)
 print "init done" 
 while not rospy.is_shutdown():
     time.sleep(0.001)
@@ -117,21 +114,15 @@ while not rospy.is_shutdown():
         continue
     if len(motor_command) < 2:
         continue
-    if len(motor_command) == 2:
-        if motor_command[0] != 1:
-            continue
-        setRspeed(motor_speed)
-        setLspeed(motor_speed)
-        setWay(motor_command[1])
+    if len(motor_command) == 3:
+        if motor_command[0] == 1:
+            setRspeed(motor_speed)
+            setLspeed(motor_speed)
+            setWay(motor_command[1])
+        elif motor_command[0] == 2:
+            Ldetailcommand(motor_command[1])
+            Rdetailcommand(motor_command[2])
 
-    elif len(motor_command) == 3:
-        if motor_command[0] != 2:
-            continue
-        Ldetailcommand(motor_command[1])
-        Rdetailcommand(motor_command[2])
 
 pR.stop()
 pL.stop()
-GPIO.cleanup()
-print ""
-print "GPIO clenaup"
