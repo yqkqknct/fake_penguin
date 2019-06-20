@@ -1,0 +1,5 @@
+<launch>
+    <group ns="detector">
+        <node pkg="fake_object_detector" name="ObjectDetector" type="object_detector.py" output="screen" />
+    </group>
+</launch>
