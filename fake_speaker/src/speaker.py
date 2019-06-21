@@ -7,7 +7,7 @@ import os,signal
 import subprocess
 import time
 
-file_path = '/home/pi/catkin_ws/src/accl/scripts'
+file_path = '/home/pi/catkin_ws/src/fake_penguin/fake_speaker/src'
 distance_thr = 1
 
 class speaker:
