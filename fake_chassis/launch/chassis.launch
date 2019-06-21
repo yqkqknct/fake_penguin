@@ -1,0 +1,8 @@
+<launch>
+    <node name="penguin_button" pkg="fake_chassis" type="penguin_button.py">
+    </node>
+    <node name="Fake_motor" pkg="fake_chassis" type="motor.py">
+    </node>
+    <node name="iBeacon_distance" pkg="fake_chassis" type="iBeacon_distance.py">
+    </node>
+</launch>
