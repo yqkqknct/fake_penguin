@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>fake_text_speaker</name>
+  <name>fake_speaker</name>
   <version>0.0.0</version>
   <description>The fake_text_speaker package</description>
 

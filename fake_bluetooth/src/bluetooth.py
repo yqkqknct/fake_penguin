@@ -22,11 +22,11 @@ class bluetooth:
     def callback(self, data):
         d = float(data.data)
         self.count.append(d)
-        if ave(count) > 1.5:
+        if ave(self.count) > 2:
             self.speaker_pub.publish("0letitgo.mp3")
         else:
             self.speaker_pub.publish("1h")
-        if len(self.count) > 10:
+        if len(self.count) > 5:
             self.count.pop(0)
 
 def main():

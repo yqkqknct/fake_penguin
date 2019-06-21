@@ -1,0 +1,6 @@
+<launch>
+    <node name="fake_control_gy801" pkg="fake_control" type="gy801.py" output="screen">
+    </node>
+    <node name="fake_joystick_control" pkg="fake_joystick_control" type="joystick_control.py" output="screen">
+    </node>
+</launch>

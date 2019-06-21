@@ -1,0 +1,7 @@
+<launch>
+    <include file="fake_eyes/fake_eyes.launch"></include>
+    <node name="fake_eyes" pkg="fake_" type=".py" output="screen">
+    </node>
+    <node name="fake_chassis_motor" pkg="fake_chassis" type="motor.py" output="screen">
+    </node>
+</launch>

@@ -21,16 +21,20 @@ class speaker:
         rospy.loginfo(rospy.get_caller_id() + 'egg/speaker heard %s', data.data)
         if data.data != "None":
             # data startswith 0, start playing music
+            
             if data.data[0] == '0':
                 # If some player not closed yet, close it.
                 if self.player:
-                    os.killpg(os.getpgid(self.player.pid), signal.SIGTERM)
-                    self.player = None
-
+                    return
+                    #os.killpg(os.getpgid(self.player.pid), signal.SIGTERM)
+                    #self.player = None
+                
                 filename = data.data[1:]
+                rospy.loginfo(filename)
+                rospy.loginfo("mpg123 " + file_path + "/" + filename)
                 self.player = subprocess.Popen("mpg123 " + file_path + "/" + filename, 
                     shell = True, preexec_fn=os.setsid)
-                os.killpg(os.getpgid(self.player.pid), signal.SIGTERM)
+                #os.killpg(os.getpgid(self.player.pid), signal.SIGTERM)
             
             # data startswith 1, stop playing music.
             elif data.data[0] == '1':

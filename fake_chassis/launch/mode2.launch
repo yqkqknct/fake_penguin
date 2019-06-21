@@ -1,0 +1,8 @@
+<launch>
+    <node name="iBeacon_distance" pkg="fake_chassis" type="iBeacon_distance.py">
+    </node>
+    <node name="fake_bluetooth" pkg="fake_bluetooth" type="bluetooth.py">
+    </node>
+    <node name="fake_speaker" pkg="fake_speaker" type="speaker.py">
+    </node>
+</launch>

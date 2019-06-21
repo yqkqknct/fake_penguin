@@ -1,0 +1,4 @@
+<launch>
+    <node name="fake_chassis_motor" pkg="fake_chassis" type="motor.py" output="screen">
+    </node>
+</launch>
