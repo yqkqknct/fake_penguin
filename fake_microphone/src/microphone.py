@@ -35,62 +35,51 @@
 
 ## Simple talker demo that listens to std_msgs/Strings published 
 ## to the 'chatter' topic
+
 import rospy
+import speech_recognition as sr
+import os
 from std_msgs.msg import String
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
-import speech_recognition as sr
-import os
-pub = None
-flag = 0
-def callback(data):
-    rospy.loginfo(rospy.get_caller_id() + 'egg/microphone heard %s', data.data)
-    global flag 
-    if data.data != 1:
-        pass
-    elif flag == 0:
-        print("start speech to text")
-        mic_str = speech_text()
-        #pub = rospy.Publisher('mic_str', String, queue_size=10)
-        global pub
-        pub.publish(str(mic_str))
 
-def speech_text():
-    global flag
-    flag = 1
-    r=sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Please wait. Calibrating microphone...")
-        #listen for 1 seconds and create the ambient noise energy level
-        r.adjust_for_ambient_noise(source, duration=1)
-        rospy.loginfo("Say something!")
-        audio=r.listen(source,timeout=10)
-    # recognize speech using Google Speech Recognition
-    try:
-        rospy.loginfo("Google Speech Recognition thinks you said:")
-        print(r.recognize_google(audio))
-        flag = 0
-        return r.recognize_google(audio)
-    except sr.UnknownValueError:
-        rospy.loginfo("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        rospy.loginfo("No response from Google Speech Recognition service: {0}".format(e))
-    flag = 0
-def listener():
+class microphone:
+    
+    def __init__(self):
+        rospy.Subscriber('/button/egg', Int32, self.callback)
+        self.pub = rospy.Publisher('/microphone/output', String, queue_size=10)
 
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
+    # Microphone was triggered, start recording and recognizing
+    def callback(self, data):
+        # dont trigger
+        if data.data == 0:
+            return
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            rospy.loginfo("Please wait. Calibrating microphone...")
+            r.adjust_for_ambient_noise(source, duration=1)
+            rospy.loginfo("Say something!")
+            audio = r.listen(source, timeout=10)
+        try:
+            rospy.loginfo("Google Speech Recognition thinks you said:")
+            
+            ret = r.recognize_google(audio)
+            rospy.loginfo(ret)
+            self.pub.publish(ret)
+
+        except sr.UnknownValueError:
+            rospy.loginfo("Google Speech Recognition could not understand audio")
+        except sr.RequestError as e:
+            rospy.loginfo("No response from Google Speech Recognition service: {0}".format(e))
+
+def main():
     rospy.init_node('microphone', anonymous=True)
+    stt = microphone()
 
-    rospy.Subscriber('/button/egg', Int32, callback)
-    global pub
-    pub = rospy.Publisher('/mic/output', String, queue_size=10)
-
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        print('Bye')
 
 if __name__ == '__main__':
-    listener()
+    main()

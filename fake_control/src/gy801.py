@@ -253,8 +253,11 @@ def talker():
     while not rospy.is_shutdown():
         #hello_str = "hello world %s" % rospy.get_time()
         #rospy.loginfo(hello_str)
-        
-        pub.publish(getdata())
+        try:
+            pub.publish(getdata())
+        except:
+            pass
+
 def getdata():
 # ================= Read the accelerometer,gyroscope and magnetometer values =================
     ACCx, ACCy, ACCz = accelerate()
