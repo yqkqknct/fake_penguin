@@ -7,13 +7,15 @@ from std_msgs.msg import Float32
 
 import blescan
 import sys
+import time
 
 import bluetooth._bluetooth as bluez
 
 
 rospy.init_node('iBeacon_distance', anonymous=True)
 pub1 = rospy.Publisher('/iBeacon/distance', Float32, queue_size = 10)
-device_UUID = '0ab4d57e77124c899c59ab944a5d47b0'
+#device_UUID = '0ab4d57e77124c899c59ab944a5d47b0'
+device_UUID = 'e20a39f473f54bc4a12f17d1ad07a961'
 
 dev_id = 0
 try:
@@ -35,7 +37,7 @@ def calculateAccuracy(Tx, rssi):
         return ratio**10
     return 0.89976*(ratio**7.7095)+0.111
 while not rospy.is_shutdown():
-    returnedList = blescan.parse_events(sock, 1)
+    returnedList = blescan.parse_events(sock, 10)
     for beacon in returnedList:
         b_data = beacon.split(',')
         UUID = b_data[-5]
@@ -47,4 +49,4 @@ while not rospy.is_shutdown():
         rssi = int(b_data[-1])
         distance = calculateAccuracy(Tx, rssi)
         pub1.publish(distance)
-        print(Tx, rssi, distance)
+        rospy.loginfo("iBeacon:"+str((Tx, rssi, distance)))
